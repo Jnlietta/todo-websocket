@@ -1,13 +1,10 @@
 const express = require('express');
 
 const app = express();
+const server = app.listen(process.env.PORT || 8000, () => {
+  console.log('Server is running...');
+});
 
 app.use((req, res) => {
-    const failure = { message: 'Not found...' };
-  
-    res.status(404).json(failure);
-  });
-  
-const server = app.listen(8000, () => {
-    console.log('Server is running on port: 8000');
-  });
+  res.status(404).send({ message: 'Not found...' });
+});
