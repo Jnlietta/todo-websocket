@@ -3,6 +3,7 @@ import io from 'socket.io-client';
 
 const App = () => {
   const [socket, setSocket] = useState();
+  const [tasks, setTasks] = useState([]);
 
   useEffect(() => {
       const socket = io('ws://localhost:8000', { transports: ['websocket'] });
