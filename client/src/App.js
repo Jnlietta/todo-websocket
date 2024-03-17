@@ -1,3 +1,5 @@
+import io from 'socket.io-client';
+
 const App = () => {
   return (
     <div className="App">
