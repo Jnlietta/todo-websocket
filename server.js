@@ -28,7 +28,7 @@ io.on('connection', (socket) => {
         //find task that have to be delete from array tasks and remove it
         const task = tasks.find(task => task.id === taskID);
         const indexOfTask = tasks.indexOf(task);
-        users.splice(indexOfTask, 1);
+        tasks.splice(indexOfTask, 1);
 
         //emiter for other users that there is deleted task
         socket.broadcast.emit('removeTask', taskID);

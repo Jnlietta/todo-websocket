@@ -14,6 +14,13 @@ const App = () => {
       };
   }, []);
 
+  const removeTask = (taskID) => {
+    //remove task localy
+    setTasks(tasks => tasks.filter(task => task.id !== taskID));
+
+    //emit removal of a task to server
+    socket.emit('removeTask', taskID);
+  };
   return (
     <div className="App">
   
@@ -28,7 +35,7 @@ const App = () => {
           {tasks.map((task) => (
             <li key={task.id} className="task">
               {task.name}
-              <button className="btn btn--red">Remove</button>
+              <button className="btn btn--red" onClick={() => removeTask(task.id)}>Remove</button>
             </li>
           ))}
         </ul>
