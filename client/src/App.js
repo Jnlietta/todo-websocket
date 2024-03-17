@@ -25,8 +25,12 @@ const App = () => {
         <h2>Tasks</h2>
   
         <ul className="tasks-section__list" id="tasks-list">
-          <li className="task">Shopping <button className="btn btn--red">Remove</button></li>
-          <li className="task">Go out with a dog <button className="btn btn--red">Remove</button></li>
+          {tasks.map((task) => (
+            <li key={task.id} className="task">
+              {task.name}
+              <button className="btn btn--red">Remove</button>
+            </li>
+          ))}
         </ul>
   
         <form id="add-task-form">
