@@ -2,7 +2,7 @@ const express = require('express');
 const socket = require('socket.io');
 
 const app = express();
-const tasks =[];
+const tasks = [];
 
 const server = app.listen(process.env.PORT || 8000, () => {
   console.log('Server is running...');
@@ -12,7 +12,7 @@ const io = socket(server);
 
 io.on('connection', (socket) => {
     //emiter to socket that is serving now (new user)
-    socket.emit('ubdateData', tasks)
+    socket.emit('updateData', tasks);
 
     //listener for event addTask
     socket.on('addTask', (newTaskObj) => {
@@ -30,8 +30,10 @@ io.on('connection', (socket) => {
         const indexOfTask = tasks.indexOf(task);
         tasks.splice(indexOfTask, 1);
 
+        const removeTaskData = { taskID: taskID, socketID: socket.id }
+
         //emiter for other users that there is deleted task
-        socket.broadcast.emit('removeTask', taskID);
+        socket.broadcast.emit('removeTask', removeTaskData);
     });
   });
 

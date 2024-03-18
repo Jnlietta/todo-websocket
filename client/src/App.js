@@ -11,10 +11,21 @@ const App = () => {
       const socket = io('ws://localhost:8000', { transports: ['websocket'] });
       setSocket(socket);
 
+      socket.on('addTask', ({ newTaskObj }) => addTask(newTaskObj));
+      socket.on('removeTask', ({ taskID, socketID }) => removeTask(taskID, socketID));
+      socket.on('updateData', ({ tasks }) => updateTasks(tasks));
+
       return () => {
         socket.disconnect();
       };
   }, []);
+
+  const updateTasks = (data) =>{
+    // array tasks from server data is not empty
+    if (data && data.tasks) {
+      setTasks(data.tasks);
+    }
+  };
 
   const addTask = (newTaskObj) => {
     //add task to array locally
@@ -24,12 +35,15 @@ const App = () => {
     setTaskName('');
   };
 
-  const removeTask = (taskID) => {
+  const removeTask = (taskID, socketID) => {
     //remove task locally
     setTasks(tasks => tasks.filter(task => task.id !== taskID));
 
-    //emit removal of a task to server
-    socket.emit('removeTask', taskID);
+    // if calling of func removeTask not comes from server
+    if(!socketID){
+      //emit removal of a task to server
+      socket.emit('removeTask', taskID);
+    }
   };
 
   const submitForm = e => {
