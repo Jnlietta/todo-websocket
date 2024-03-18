@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import io from 'socket.io-client';
+import { v4 as uuidv4 } from 'uuid';
 
 const App = () => {
   const [socket, setSocket] = useState();
@@ -15,8 +16,16 @@ const App = () => {
       };
   }, []);
 
+  const addTask = (newTaskObj) => {
+    //add task to array locally
+    setTasks(prevTasks => [...prevTasks, newTaskObj]);
+    
+    //clear input
+    setTaskName('');
+  };
+
   const removeTask = (taskID) => {
-    //remove task localy
+    //remove task locally
     setTasks(tasks => tasks.filter(task => task.id !== taskID));
 
     //emit removal of a task to server
@@ -25,6 +34,12 @@ const App = () => {
 
   const submitForm = e => {
     e.preventDefault();
+    const randomID = uuidv4();
+    const newTaskObj = { name: taskName, id: randomID };
+    addTask(newTaskObj);
+
+    //emit event addTask with new task to server
+    socket.emit('addTask', newTaskObj);
   };
 
   return (

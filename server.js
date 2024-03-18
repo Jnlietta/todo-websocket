@@ -15,12 +15,12 @@ io.on('connection', (socket) => {
     socket.emit('ubdateData', tasks)
 
     //listener for event addTask
-    socket.on('addTask', (task) => {
-        //add task to array tasks, task = { name, id }
-        tasks.push(task);
+    socket.on('addTask', (newTaskObj) => {
+        //add task to array tasks, newTaskObj = { name, id }
+        tasks.push(newTaskObj);
 
         //emiter for other users that there is new task
-        socket.broadcast.emit('addTask', task);
+        socket.broadcast.emit('addTask', newTaskObj);
     });
 
     //listener for event removeTask
