@@ -10,10 +10,10 @@ const App = () => {
   useEffect(() => {
       const socket = io('ws://localhost:8000', { transports: ['websocket'] });
       setSocket(socket);
-
-      socket.on('addTask', ({ newTaskObj }) => addTask(newTaskObj));
+      
+      socket.on('addTask', ( newTaskObj ) => addTask(newTaskObj));
       socket.on('removeTask', ({ taskID, socketID }) => removeTask(taskID, socketID));
-      socket.on('updateData', ({ tasks }) => updateTasks(tasks));
+      socket.on('updateData', ( tasks ) => updateTasks(tasks));
 
       return () => {
         socket.disconnect();
@@ -21,15 +21,18 @@ const App = () => {
   }, []);
 
   const updateTasks = (data) =>{
+    console.log('updateTasks data: ', data);
     // array tasks from server data is not empty
-    if (data && data.tasks) {
-      setTasks(data.tasks);
+    if (data) {
+      setTasks(data);
     }
   };
 
   const addTask = (newTaskObj) => {
+    console.log('2 addTask newTaskObj: ', newTaskObj);
     //add task to array locally
     setTasks(prevTasks => [...prevTasks, newTaskObj]);
+    console.log('3 addTask array tasks: ', tasks);
     
     //clear input
     setTaskName('');
@@ -50,7 +53,9 @@ const App = () => {
     e.preventDefault();
     const randomID = uuidv4();
     const newTaskObj = { name: taskName, id: randomID };
+    console.log("1 submitForm newTaskObj: ", newTaskObj);
     addTask(newTaskObj);
+    console.log("4 submitForm newTaskObj: ", newTaskObj);
 
     //emit event addTask with new task to server
     socket.emit('addTask', newTaskObj);

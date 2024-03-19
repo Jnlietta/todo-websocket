@@ -21,14 +21,18 @@ const io = socket(server);
 io.on('connection', (socket) => {
     //emiter to socket that is serving now (new user)
     socket.emit('updateData', tasks);
+    console.log('New client! Its id – ' + socket.id);
 
     //listener for event addTask
     socket.on('addTask', (newTaskObj) => {
         //add task to array tasks, newTaskObj = { name, id }
         tasks.push(newTaskObj);
+        console.log('5 New task is added: ' + newTaskObj);
+        console.log('6 Array tasks in server updated: ',tasks);
 
         //emiter for other users that there is new task
         socket.broadcast.emit('addTask', newTaskObj);
+        console.log('7 Socket ' + socket.id + ' emited the event addTask to other sockets.')
     });
 
     //listener for event removeTask
